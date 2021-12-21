@@ -33,7 +33,6 @@ class ProductsModule {
   ProductsLocalSource getProductsLocalSource() {
     return ProductsLocalSource(
       getProductListMapper(),
-      getLocalEntityToProductMapper(),
     );
   }
 

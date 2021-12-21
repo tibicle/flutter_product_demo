@@ -1,15 +1,21 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:product_management_demo/helper/local_database/db_error.dart';
 import 'package:product_management_demo/products/model/product.dart';
 import 'package:product_management_demo/products/repo/products_repo.dart';
 import 'package:product_management_demo/products/ui/mobile/products_mobile_widget.dart';
-import 'package:product_management_demo/utils/navigation_utils.dart';
 
 class ProductsBloc extends ChangeNotifier {
   final ProductRepo _productRepo;
   List<Product>? products;
   ProductsBloc(this._productRepo);
   FilterType currentFilterType = FilterType.sortByName;
+  var isList = false;
+
+  void setLayoutType(bool isList) {
+    this.isList = isList;
+    notifyListeners();
+  }
 
   void getProducts() async {
     products = await _productRepo.getProducts();
@@ -22,7 +28,7 @@ class ProductsBloc extends ChangeNotifier {
     if (!isDelete) return;
     try {
       await _productRepo.deleteProduct(id);
-      products?.removeWhere((element) => element.name == id);
+      products?.removeWhere((element) => element.id == id);
     } catch (e) {
       if (e is DatabaseException) {
         var exception = e;
@@ -37,13 +43,13 @@ class ProductsBloc extends ChangeNotifier {
     Widget cancelButton = TextButton(
       child: Text("Cancel"),
       onPressed: () {
-        NavigationUtils.pop(context, args: false);
+        AutoRouter.of(context).pop(false);
       },
     );
     Widget continueButton = TextButton(
       child: Text("Yes"),
       onPressed: () {
-        NavigationUtils.pop(context, args: true);
+        AutoRouter.of(context).pop(true);
       },
     );
 

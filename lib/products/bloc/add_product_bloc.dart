@@ -11,8 +11,10 @@ class AddProductBloc extends ChangeNotifier {
   AddProductBloc(this._productRepo);
 
   String name = "";
+  TextEditingController nameCtr = TextEditingController();
   TextEditingController launchDate = TextEditingController();
   String launchSite = "";
+  TextEditingController launchSiteCtr = TextEditingController();
   double ratings = -1;
   String? ratingsError;
   String? dataBaseError;
@@ -82,7 +84,7 @@ class AddProductBloc extends ChangeNotifier {
     }
   }
 
-  void editProduct(Product product, BuildContext context) async {
+  void editProduct(String id, BuildContext context) async {
     ratingsError = null;
     dataBaseError = null;
     var isValid = (formKey.currentState?.validate() ?? true);
@@ -94,9 +96,9 @@ class AddProductBloc extends ChangeNotifier {
     if (!isValid) return;
 
     try {
-      await _productRepo.editProduct(
-          product.id, name, launchDate.text, launchSite, ratings);
-      Navigator.of(context).pop(product);
+      var editedProduct = await _productRepo.editProduct(
+          id, name, launchDate.text, launchSite, ratings);
+      Navigator.of(context).pop(editedProduct);
     } catch (e) {
       if (e is DatabaseException) {
         var exception = e;
@@ -109,8 +111,15 @@ class AddProductBloc extends ChangeNotifier {
   void loadData(Product product) {
     launchDate.text = product.launchedAt;
     name = product.name;
+    nameCtr.text = product.name;
     ratings = product.ratings;
     launchSite = product.launchedSite;
+    launchSiteCtr.text = product.launchedSite;
     notifyListeners();
+  }
+
+  void loadProduct(String id) async {
+    var product = await _productRepo.getProductByid(id);
+    loadData(product);
   }
 }

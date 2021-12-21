@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:product_management_demo/products/ui/add_product_page.dart';
-import 'package:product_management_demo/products/ui/products_page.dart';
-import 'package:product_management_demo/utils/navigation_utils.dart';
-import 'package:product_management_demo/utils/route_const.dart';
+
+import 'utils/navigation_route_util.gr.dart';
 
 void main() {
   mainDelegate();
@@ -10,22 +8,23 @@ void main() {
 
 void mainDelegate() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+  final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Product Management App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      initialRoute: routeHome,
-      onGenerateRoute: NavigationUtils.generateRoute,
+      routeInformationParser: _appRouter.defaultRouteParser(),
+      routerDelegate: _appRouter.delegate(),
     );
   }
 }

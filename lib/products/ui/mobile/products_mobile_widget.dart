@@ -1,10 +1,10 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:product_management_demo/products/bloc/products_bloc.dart';
 import 'package:product_management_demo/products/model/product.dart';
-import 'package:product_management_demo/utils/navigation_argument_const.dart';
-import 'package:product_management_demo/utils/navigation_utils.dart';
-import 'package:product_management_demo/utils/route_const.dart';
+import 'package:product_management_demo/utils/date_utils.dart';
+import 'package:product_management_demo/utils/navigation_route_util.gr.dart';
 
 class ProductsMobileWidget extends StatefulWidget {
   final List<Product> products;
@@ -30,7 +30,7 @@ class _ProductsMobileWidgetState extends State<ProductsMobileWidget> {
           filterButton(),
           IconButton(
             onPressed: () async {
-              await NavigationUtils.push(context, routeAddProduct);
+              await AutoRouter.of(context).push(AddProduct());
               widget.productsBloc.getProducts();
             },
             icon: const Icon(Icons.add),
@@ -43,101 +43,100 @@ class _ProductsMobileWidgetState extends State<ProductsMobileWidget> {
             padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             itemCount: widget.products.length,
             separatorBuilder: (context, index) => SizedBox(height: 10),
-            itemBuilder: (context, index) {
-              return Card(
-                elevation: 4,
-                child: Container(
-                  padding: EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          title("Name:   ", widget.products[index].name),
-                          title("Launch Date:   ",
-                              widget.products[index].launchedAt),
-                          title("Launched Site:   ",
-                              widget.products[index].launchedSite),
-                          Row(
-                            children: [
-                              Text(
-                                "Ratings:   ",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                              RatingBarIndicator(
-                                rating: widget.products[index].ratings,
-                                itemSize: 20,
-                                itemBuilder: (context, _) => const Icon(
-                                  Icons.star,
-                                  color: Colors.amber,
-                                  size: 10,
-                                ),
-                              ),
-                            ],
-                          )
-                        ],
+            itemBuilder: itemBuilder),
+      ),
+    );
+  }
+
+  Widget itemBuilder(BuildContext context, int index) {
+    var product = widget.products[index];
+    return Card(
+      elevation: 4,
+      child: Container(
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                title("Name:   ", product.name),
+                title(
+                    "Launch Date:   ",
+                    product.launchedAt
+                            .tryParse("yyyy-MM-dd hh:mm:ssz")
+                            ?.getFormatedString("dd MMM, yyyy") ??
+                        ''),
+                title("Launched Site:   ", product.launchedSite),
+                Row(
+                  children: [
+                    Text(
+                      "Ratings:   ",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).primaryColor),
+                    ),
+                    RatingBarIndicator(
+                      rating: product.ratings,
+                      itemSize: 20,
+                      itemBuilder: (context, _) => const Icon(
+                        Icons.star,
+                        color: Colors.amber,
+                        size: 10,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          ElevatedButton.icon(
-                            style: ButtonStyle(
-                              alignment: Alignment.center,
-                              minimumSize:
-                                  MaterialStateProperty.all(Size(100, 30)),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                            ),
-                            onPressed: () async {
-                              await NavigationUtils.push(
-                                  context, routeAddProduct, arguments: {
-                                argProduct: widget.products[index]
-                              });
-                              widget.productsBloc.getProducts();
-                            },
-                            icon: Icon(
-                              Icons.edit_rounded,
-                              size: 15,
-                            ),
-                            label: Text("Edit"),
-                          ),
-                          ElevatedButton.icon(
-                            style: ButtonStyle(
-                              minimumSize:
-                                  MaterialStateProperty.all(Size(100, 30)),
-                              backgroundColor:
-                                  MaterialStateProperty.all(Colors.redAccent),
-                              shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20.0),
-                                ),
-                              ),
-                            ),
-                            onPressed: () {
-                              widget.productsBloc.deleteProduct(
-                                  widget.products[index].name, context);
-                            },
-                            icon: Icon(
-                              Icons.delete,
-                              size: 15,
-                            ),
-                            label: Text("Delete"),
-                          )
-                        ],
-                      )
-                    ],
+                    ),
+                  ],
+                )
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton.icon(
+                  style: ButtonStyle(
+                    alignment: Alignment.center,
+                    minimumSize: MaterialStateProperty.all(Size(100, 30)),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
                   ),
+                  onPressed: () async {
+                    await AutoRouter.of(context)
+                        .push(EditProduct(id: product.id));
+                    widget.productsBloc.getProducts();
+                  },
+                  icon: Icon(
+                    Icons.edit_rounded,
+                    size: 15,
+                  ),
+                  label: Text("Edit"),
                 ),
-              );
-            }),
+                ElevatedButton.icon(
+                  style: ButtonStyle(
+                    minimumSize: MaterialStateProperty.all(Size(100, 30)),
+                    backgroundColor:
+                        MaterialStateProperty.all(Colors.redAccent),
+                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                  ),
+                  onPressed: () {
+                    widget.productsBloc.deleteProduct(product.id, context);
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    size: 15,
+                  ),
+                  label: Text("Delete"),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

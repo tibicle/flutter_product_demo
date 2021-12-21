@@ -25,4 +25,8 @@ class ProductRepo {
   Future<Product> deleteProduct(String id) {
     return _productsLocalSource.deleteProduct(id);
   }
+
+  Future<Product> getProductByid(String id) {
+    return _productsLocalSource.getProductByid(id);
+  }
 }

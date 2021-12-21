@@ -32,6 +32,7 @@ class _ProductsPageState extends State<ProductsPage> {
             if (kIsWeb) {
               return ProductsWebWidget(
                 products: bloc.products ?? [],
+                productsBloc: _productsBloc,
               );
             }
             return ProductsMobileWidget(
