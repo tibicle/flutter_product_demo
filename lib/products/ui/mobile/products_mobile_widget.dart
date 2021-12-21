@@ -30,7 +30,8 @@ class _ProductsMobileWidgetState extends State<ProductsMobileWidget> {
           filterButton(),
           IconButton(
             onPressed: () async {
-              await AutoRouter.of(context).push(AddProduct());
+              await AutoRouter.of(context)
+                  .push(AddProduct(isUrlRedirection: false));
               widget.productsBloc.getProducts();
             },
             icon: const Icon(Icons.add),
@@ -64,7 +65,7 @@ class _ProductsMobileWidgetState extends State<ProductsMobileWidget> {
                 title(
                     "Launch Date:   ",
                     product.launchedAt
-                            .tryParse("yyyy-MM-dd hh:mm:ssz")
+                            .tryParse("yyyy-MM-dd")
                             ?.getFormatedString("dd MMM, yyyy") ??
                         ''),
                 title("Launched Site:   ", product.launchedSite),
@@ -76,14 +77,10 @@ class _ProductsMobileWidgetState extends State<ProductsMobileWidget> {
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).primaryColor),
                     ),
-                    RatingBarIndicator(
-                      rating: product.ratings,
-                      itemSize: 20,
-                      itemBuilder: (context, _) => const Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                        size: 10,
-                      ),
+                    Text("${product.ratings}"),
+                    Icon(
+                      Icons.star,
+                      size: 15,
                     ),
                   ],
                 )
@@ -103,8 +100,8 @@ class _ProductsMobileWidgetState extends State<ProductsMobileWidget> {
                     ),
                   ),
                   onPressed: () async {
-                    await AutoRouter.of(context)
-                        .push(EditProduct(id: product.id));
+                    await AutoRouter.of(context).push(
+                        EditProduct(id: product.id, isUrlRedirection: false));
                     widget.productsBloc.getProducts();
                   },
                   icon: Icon(

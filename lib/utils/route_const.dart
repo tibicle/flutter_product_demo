@@ -1,2 +1,2 @@
-const String routeHome = "home";
-const String routeAddProduct = "add-product";
+const String routeHome = "products";
+const String routeAddProduct = "add";

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:product_management_demo/helper/local_database/db_error.dart';
 import 'package:product_management_demo/products/model/product.dart';
 import 'package:product_management_demo/products/repo/products_repo.dart';
+import '../../utils/date_utils.dart';
 
 class AddProductBloc extends ChangeNotifier {
   final ProductRepo _productRepo;
@@ -15,8 +16,7 @@ class AddProductBloc extends ChangeNotifier {
   TextEditingController launchDate = TextEditingController();
   String launchSite = "";
   TextEditingController launchSiteCtr = TextEditingController();
-  double ratings = -1;
-  String? ratingsError;
+  double ratings = 0;
   String? dataBaseError;
 
   onNameChanged(String value) => name = value;
@@ -50,13 +50,8 @@ class AddProductBloc extends ChangeNotifier {
   }
 
   void addProduct(BuildContext context) async {
-    ratingsError = null;
     dataBaseError = null;
     var isValid = (formKey.currentState?.validate() ?? true);
-    if (ratings < 0) {
-      isValid = false;
-      ratingsError = "Add Ratings";
-    }
     notifyListeners();
     if (!isValid) return;
 
@@ -80,18 +75,13 @@ class AddProductBloc extends ChangeNotifier {
         firstDate: DateTime(0),
         lastDate: DateTime(3000));
     if (date != null) {
-      launchDate.text = date.toString();
+      launchDate.text = date.getFormatedString("yyyy-MM-dd");
     }
   }
 
   void editProduct(String id, BuildContext context) async {
-    ratingsError = null;
     dataBaseError = null;
     var isValid = (formKey.currentState?.validate() ?? true);
-    if (ratings < 0) {
-      isValid = false;
-      ratingsError = "Add Ratings";
-    }
     notifyListeners();
     if (!isValid) return;
 

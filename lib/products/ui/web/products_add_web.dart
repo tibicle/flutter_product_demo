@@ -26,7 +26,7 @@ class AddProductWeb extends StatelessWidget {
                         SizedBox(width: 16),
                         IconButton(
                           onPressed: () {
-                            AutoRouter.of(context).navigate(Productlisting());
+                            AutoRouter.of(context).navigate(Products());
                           },
                           icon: Icon(
                             Icons.list,
@@ -77,6 +77,7 @@ class AddProductWeb extends StatelessWidget {
                                 },
                                 child: AbsorbPointer(
                                   child: TextFormField(
+                                    readOnly: true,
                                     controller: productsBloc.launchDate,
                                     onChanged: productsBloc.onLaunchDateChanged,
                                     validator: productsBloc.validateLaunchDate,
@@ -119,14 +120,6 @@ class AddProductWeb extends StatelessWidget {
                                 ),
                                 onRatingUpdate: productsBloc.onRatingsChagned,
                               ),
-                              if (bloc.ratingsError != null)
-                                Text(
-                                  bloc.ratingsError ?? '',
-                                  style: TextStyle(
-                                    color: Theme.of(context).errorColor,
-                                    fontSize: 12,
-                                  ),
-                                ),
                               Align(
                                 child: ElevatedButton(
                                   onPressed: () {

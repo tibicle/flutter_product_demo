@@ -46,7 +46,8 @@ class _ProductsWebWidgetState extends State<ProductsWebWidget> {
                     SizedBox(width: 10),
                     IconButton(
                       onPressed: () async {
-                        await AutoRouter.of(context).push(AddProduct());
+                        await AutoRouter.of(context)
+                            .push(AddProduct(isUrlRedirection: false));
                         widget.productsBloc.getProducts();
                       },
                       icon: Icon(Icons.add,

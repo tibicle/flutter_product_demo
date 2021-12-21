@@ -10,7 +10,7 @@ class ProductsBloc extends ChangeNotifier {
   List<Product>? products;
   ProductsBloc(this._productRepo);
   FilterType currentFilterType = FilterType.sortByName;
-  var isList = false;
+  var isList = true;
 
   void setLayoutType(bool isList) {
     this.isList = isList;

@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:product_management_demo/products/bloc/products_bloc.dart';
 import 'package:product_management_demo/products/model/product.dart';
 import 'package:product_management_demo/utils/date_utils.dart';
@@ -38,7 +37,7 @@ class ProductWebListView extends StatelessWidget {
                   context,
                   "Launch Date:   ",
                   product.launchedAt
-                          .tryParse("yyyy-MM-dd hh:mm:ssz")
+                          .tryParse("yyyy-MM-dd")
                           ?.getFormatedString("dd MMM, yyyy") ??
                       ''),
               title(context, "Launched Site:   ", product.launchedSite),
@@ -51,15 +50,14 @@ class ProductWebListView extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).primaryColor),
                   ),
-                  RatingBarIndicator(
-                    itemPadding: EdgeInsets.all(0),
-                    rating: product.ratings,
-                    itemSize: 20,
-                    itemBuilder: (context, _) => const Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                      size: 10,
-                    ),
+                  Row(
+                    children: [
+                      Text("${product.ratings}"),
+                      Icon(
+                        Icons.star,
+                        size: 15,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -78,8 +76,8 @@ class ProductWebListView extends StatelessWidget {
                       ),
                     ),
                     onPressed: () async {
-                      await AutoRouter.of(context)
-                          .push(EditProduct(id: product.id));
+                      await AutoRouter.of(context).push(
+                          EditProduct(id: product.id, isUrlRedirection: false));
                       productsBloc.getProducts();
                     },
                     icon: Icon(

@@ -55,7 +55,7 @@ class ProductWebGridView extends StatelessWidget {
                 context,
                 "Launch Date:   ",
                 product.launchedAt
-                        .tryParse("yyyy-MM-dd hh:mm:ssz")
+                        .tryParse("yyyy-MM-dd")
                         ?.getFormatedString("dd MMM, yyyy") ??
                     ''),
             SizedBox(height: 5),
@@ -63,6 +63,7 @@ class ProductWebGridView extends StatelessWidget {
             SizedBox(height: 5),
             Row(
               mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
                   "Ratings:   ",
@@ -70,14 +71,10 @@ class ProductWebGridView extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       color: Theme.of(context).primaryColor),
                 ),
-                RatingBarIndicator(
-                  rating: product.ratings,
-                  itemSize: 20,
-                  itemBuilder: (context, _) => const Icon(
-                    Icons.star,
-                    color: Colors.amber,
-                    size: 10,
-                  ),
+                Text("${product.ratings}"),
+                Icon(
+                  Icons.star,
+                  size: 15,
                 ),
               ],
             ),
@@ -96,8 +93,8 @@ class ProductWebGridView extends StatelessWidget {
                     ),
                   ),
                   onPressed: () async {
-                    await AutoRouter.of(context)
-                        .push(EditProduct(id: product.id));
+                    await AutoRouter.of(context).push(
+                        EditProduct(id: product.id, isUrlRedirection: false));
                     productsBloc.getProducts();
                   },
                   icon: Icon(

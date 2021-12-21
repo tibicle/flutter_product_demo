@@ -8,8 +8,11 @@ import 'package:product_management_demo/products/ui/web/products_add_web.dart';
 import 'package:provider/provider.dart';
 
 class AddProductPage extends StatefulWidget {
+  final bool isUrlRedirection;
   final String? id;
-  const AddProductPage({Key? key, @PathParam('id') this.id}) : super(key: key);
+  const AddProductPage(
+      {Key? key, @PathParam('id') this.id, this.isUrlRedirection = true})
+      : super(key: key);
 
   @override
   _AddProductPageState createState() => _AddProductPageState();
@@ -21,6 +24,7 @@ class _AddProductPageState extends State<AddProductPage> {
   @override
   void initState() {
     super.initState();
+
     _productsBloc = ProductsModule().getAddProductBloc();
     loadData();
   }

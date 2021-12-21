@@ -51,6 +51,7 @@ class AddProductMobile extends StatelessWidget {
                             },
                             child: AbsorbPointer(
                               child: TextFormField(
+                                readOnly: true,
                                 controller: productsBloc.launchDate,
                                 onChanged: productsBloc.onLaunchDateChanged,
                                 validator: productsBloc.validateLaunchDate,
@@ -92,14 +93,6 @@ class AddProductMobile extends StatelessWidget {
                             ),
                             onRatingUpdate: productsBloc.onRatingsChagned,
                           ),
-                          if (bloc.ratingsError != null)
-                            Text(
-                              bloc.ratingsError ?? '',
-                              style: TextStyle(
-                                color: Theme.of(context).errorColor,
-                                fontSize: 12,
-                              ),
-                            ),
                           Align(
                             child: ElevatedButton(
                               onPressed: () {

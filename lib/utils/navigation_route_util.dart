@@ -9,18 +9,18 @@ import 'package:product_management_demo/utils/route_const.dart';
     AutoRoute(
       page: ProductsPage,
       initial: true,
-      path: routeHome,
-      name: "productlisting",
+      path: "/$routeHome",
+      name: "products",
     ),
     AutoRoute(
       page: AddProductPage,
-      path: "/$routeAddProduct",
-      name: "AddProduct",
+      path: "/$routeHome/$routeAddProduct",
+      name: "addProduct",
     ),
     AutoRoute(
       page: AddProductPage,
-      path: "/$routeAddProduct/:id",
-      name: "EditProduct",
+      path: "/$routeHome/$routeAddProduct/:id",
+      name: "editProduct",
     ),
   ],
 )
