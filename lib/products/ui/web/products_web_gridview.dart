@@ -33,11 +33,10 @@ class ProductWebGridView extends StatelessWidget {
   double aspectRatio(BuildContext context) {
     int crossAxisCount = screenSize(context);
     var width = MediaQuery.of(context).size.width;
-
     switch (crossAxisCount) {
       case 4:
-        if (width < 1250) return 1.8;
-        if (width < 1400) return 2.0;
+        if (width < 1290) return 1.8;
+        if (width < 1410) return 2.0;
         return 2.2;
       case 3:
         if (width > 1080) return 2.2;
