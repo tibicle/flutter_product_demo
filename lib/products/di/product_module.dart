@@ -18,10 +18,6 @@ class ProductsModule {
     return ProductsBloc(getProductRepo());
   }
 
-  AddProductBloc getAddProductsBloc() {
-    return AddProductBloc(getProductRepo());
-  }
-
   AddProductBloc getAddProductBloc() {
     return AddProductBloc(getProductRepo());
   }

@@ -57,6 +57,15 @@ class _ProductsWebWidgetState extends State<ProductsWebWidget> {
                   ],
                 )),
             Divider(),
+            if (widget.products.isEmpty)
+              Expanded(
+                child: Center(
+                  child: Text(
+                    'You haven\'t added any products yet.\nTap on \'+\' to add one!',
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
             Expanded(
               child: widget.productsBloc.isList
                   ? ProductWebListView(
@@ -82,10 +91,11 @@ class _ProductsWebWidgetState extends State<ProductsWebWidget> {
       },
       itemBuilder: (context) {
         return [
-          getMenu(FilterType.sortByName, "Sort by name"),
-          getMenu(FilterType.sortByLaunchdate, "Sort by launch date"),
-          getMenu(FilterType.sortByLaunchsite, "Sort by launch site"),
-          getMenu(FilterType.sortByRatings, "Sort by ratings")
+          getMenu(FilterType.sortByName, "Sort by name (A -> Z)"),
+          getMenu(FilterType.sortByLaunchdate,
+              "Sort by launch date (Recent first)"),
+          getMenu(FilterType.sortByLaunchsite, "Sort by launch site (A -> Z)"),
+          getMenu(FilterType.sortByRatings, "Sort by ratings (High to Low)")
         ];
       });
 

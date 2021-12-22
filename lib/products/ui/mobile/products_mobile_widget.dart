@@ -5,6 +5,7 @@ import 'package:product_management_demo/products/bloc/products_bloc.dart';
 import 'package:product_management_demo/products/model/product.dart';
 import 'package:product_management_demo/utils/date_utils.dart';
 import 'package:product_management_demo/utils/navigation_route_util.gr.dart';
+import 'package:product_management_demo/widgets/ratings.dart';
 
 class ProductsMobileWidget extends StatefulWidget {
   final List<Product> products;
@@ -40,11 +41,19 @@ class _ProductsMobileWidgetState extends State<ProductsMobileWidget> {
         ],
       ),
       body: SafeArea(
-        child: ListView.separated(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-            itemCount: widget.products.length,
-            separatorBuilder: (context, index) => SizedBox(height: 10),
-            itemBuilder: itemBuilder),
+        child: widget.products.isEmpty
+            ? Center(
+                child: Text(
+                  'You haven\'t added any products yet.\nTap on \'+\' to add one!',
+                  textAlign: TextAlign.center,
+                ),
+              )
+            : ListView.separated(
+                padding: EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                itemCount: widget.products.length,
+                separatorBuilder: (context, index) => SizedBox(height: 10),
+                itemBuilder: itemBuilder,
+              ),
       ),
     );
   }
@@ -58,80 +67,91 @@ class _ProductsMobileWidgetState extends State<ProductsMobileWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    product.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Ratings(
+                      ratings: product.ratings,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 5),
+            Row(
+              children: [
+                Icon(
+                  Icons.calendar_today,
+                  size: 18,
+                ),
+                SizedBox(
+                  width: 2,
+                ),
+                Text(
+                  product.launchedAt
+                          .tryParse("yyyy-MM-dd")
+                          ?.getFormatedString("dd MMM, yyyy") ??
+                      '',
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 6,
+            ),
+            Row(
+              children: [
+                Icon(
+                  Icons.location_on_outlined,
+                  size: 18,
+                ),
+                SizedBox(
+                  width: 2,
+                ),
+                Text(
+                  product.launchedSite,
+                ),
+              ],
+            ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                title("Name:   ", product.name),
-                title(
-                    "Launch Date:   ",
-                    product.launchedAt
-                            .tryParse("yyyy-MM-dd")
-                            ?.getFormatedString("dd MMM, yyyy") ??
-                        ''),
-                title("Launched Site:   ", product.launchedSite),
                 Row(
-                  children: [
-                    Text(
-                      "Ratings:   ",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).primaryColor),
-                    ),
-                    Text("${product.ratings}"),
-                    Icon(
-                      Icons.star,
-                      size: 15,
-                    ),
-                  ],
+                  children: [],
                 )
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton.icon(
-                  style: ButtonStyle(
-                    alignment: Alignment.center,
-                    minimumSize: MaterialStateProperty.all(Size(100, 30)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
+                IconButton(
                   onPressed: () async {
                     await AutoRouter.of(context).push(
                         EditProduct(id: product.id, isUrlRedirection: false));
                     widget.productsBloc.getProducts();
                   },
-                  icon: Icon(
-                    Icons.edit_rounded,
-                    size: 15,
-                  ),
-                  label: Text("Edit"),
+                  icon: Icon(Icons.edit),
                 ),
-                ElevatedButton.icon(
-                  style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(Size(100, 30)),
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.redAccent),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
+                SizedBox(
+                  width: 4,
+                ),
+                IconButton(
                   onPressed: () {
                     widget.productsBloc.deleteProduct(product.id, context);
                   },
-                  icon: Icon(
-                    Icons.delete,
-                    size: 15,
-                  ),
-                  label: Text("Delete"),
-                )
+                  icon: Icon(Icons.delete),
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -159,10 +179,11 @@ class _ProductsMobileWidgetState extends State<ProductsMobileWidget> {
       },
       itemBuilder: (context) {
         return [
-          getMenu(FilterType.sortByName, "Sort by name"),
-          getMenu(FilterType.sortByLaunchdate, "Sort by launch date"),
-          getMenu(FilterType.sortByLaunchsite, "Sort by launch site"),
-          getMenu(FilterType.sortByRatings, "Sort by ratings")
+          getMenu(FilterType.sortByName, "Sort by name (A -> Z)"),
+          getMenu(FilterType.sortByLaunchdate,
+              "Sort by launch date (Recent first)"),
+          getMenu(FilterType.sortByLaunchsite, "Sort by launch site (A -> Z)"),
+          getMenu(FilterType.sortByRatings, "Sort by ratings (High to Low)")
         ];
       });
 

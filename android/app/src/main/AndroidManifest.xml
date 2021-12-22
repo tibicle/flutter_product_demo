@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.product_management_demo">
    <application
-        android:label="product_management_demo"
+        android:label="Product Management"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

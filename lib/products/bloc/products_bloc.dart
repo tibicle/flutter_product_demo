@@ -81,7 +81,7 @@ class ProductsBloc extends ChangeNotifier {
         break;
       case FilterType.sortByRatings:
         products?.sort((a, b) {
-          return a.ratings.compareTo(b.ratings);
+          return b.ratings.compareTo(a.ratings);
         });
         notifyListeners();
         break;

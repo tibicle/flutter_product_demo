@@ -4,6 +4,7 @@ import 'package:product_management_demo/products/bloc/products_bloc.dart';
 import 'package:product_management_demo/products/model/product.dart';
 import 'package:product_management_demo/utils/date_utils.dart';
 import 'package:product_management_demo/utils/navigation_route_util.gr.dart';
+import 'package:product_management_demo/widgets/ratings.dart';
 
 class ProductWebListView extends StatelessWidget {
   final List<Product> products;
@@ -12,6 +13,7 @@ class ProductWebListView extends StatelessWidget {
   const ProductWebListView(
       {Key? key, required this.products, required this.productsBloc})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return ListView.separated(
@@ -30,85 +32,86 @@ class ProductWebListView extends StatelessWidget {
       child: IntrinsicHeight(
         child: Container(
           padding: EdgeInsets.all(10),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              title(context, "Name:   ", product.name),
-              title(
-                  context,
-                  "Launch Date:   ",
-                  product.launchedAt
-                          .tryParse("yyyy-MM-dd")
-                          ?.getFormatedString("dd MMM, yyyy") ??
-                      ''),
-              title(context, "Launched Site:   ", product.launchedSite),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  Text(
-                    "Ratings:   ",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).primaryColor),
+                  Expanded(
+                    child: Text(
+                      product.name,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                   ),
                   Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("${product.ratings}"),
-                      Icon(
-                        Icons.star,
-                        size: 15,
+                      Ratings(
+                        ratings: product.ratings,
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          await AutoRouter.of(context).push(EditProduct(
+                              id: product.id, isUrlRedirection: false));
+                          productsBloc.getProducts();
+                        },
+                        child: Icon(Icons.edit),
+                      ),
+                      SizedBox(
+                        width: 4,
+                      ),
+                      InkWell(
+                        onTap: () {
+                          productsBloc.deleteProduct(product.id, context);
+                        },
+                        child: Icon(Icons.delete),
                       ),
                     ],
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 4,
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.calendar_today,
+                    size: 18,
+                  ),
+                  SizedBox(
+                    width: 2,
+                  ),
+                  Text(
+                    product.launchedAt
+                            .tryParse("yyyy-MM-dd")
+                            ?.getFormatedString("dd MMM, yyyy") ??
+                        '',
                   ),
                 ],
               ),
-              SizedBox(width: 8),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              SizedBox(
+                height: 6,
+              ),
+              Row(
                 children: [
-                  ElevatedButton.icon(
-                    style: ButtonStyle(
-                      alignment: Alignment.center,
-                      minimumSize: MaterialStateProperty.all(Size(100, 30)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      await AutoRouter.of(context).push(
-                          EditProduct(id: product.id, isUrlRedirection: false));
-                      productsBloc.getProducts();
-                    },
-                    icon: Icon(
-                      Icons.edit_rounded,
-                      size: 15,
-                    ),
-                    label: Text("Edit"),
+                  Icon(
+                    Icons.location_on_outlined,
+                    size: 18,
                   ),
-                  SizedBox(height: 8),
-                  ElevatedButton.icon(
-                    style: ButtonStyle(
-                      minimumSize: MaterialStateProperty.all(Size(100, 30)),
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.redAccent),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                      ),
-                    ),
-                    onPressed: () {
-                      productsBloc.deleteProduct(product.id, context);
-                    },
-                    icon: Icon(
-                      Icons.delete,
-                      size: 15,
-                    ),
-                    label: Text("Delete"),
-                  )
+                  SizedBox(
+                    width: 2,
+                  ),
+                  Text(
+                    product.launchedSite,
+                  ),
                 ],
-              )
+              ),
             ],
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:product_management_demo/products/bloc/add_product_bloc.dart';
@@ -26,7 +27,11 @@ class _AddProductPageState extends State<AddProductPage> {
     super.initState();
 
     _productsBloc = ProductsModule().getAddProductBloc();
-    loadData();
+    if (widget.isUrlRedirection) {
+      AutoRouter.of(context).pop();
+    } else {
+      loadData();
+    }
   }
 
   void loadData() {
@@ -37,6 +42,7 @@ class _AddProductPageState extends State<AddProductPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.isUrlRedirection) return Container();
     return ChangeNotifierProvider<AddProductBloc>(
         create: (_) => _productsBloc,
         builder: (context, child) {

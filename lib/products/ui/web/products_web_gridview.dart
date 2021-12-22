@@ -4,6 +4,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:product_management_demo/products/bloc/products_bloc.dart';
 import 'package:product_management_demo/products/model/product.dart';
 import 'package:product_management_demo/utils/navigation_route_util.gr.dart';
+import 'package:product_management_demo/widgets/ratings.dart';
 import '../../../utils/date_utils.dart';
 
 class ProductWebGridView extends StatelessWidget {
@@ -13,19 +14,42 @@ class ProductWebGridView extends StatelessWidget {
   const ProductWebGridView(
       {Key? key, required this.products, required this.productsBloc})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    screenSize(context);
+    aspectRatio(context);
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: screenSize(context),
-        childAspectRatio: screenSize(context) == 1 ? 3 : 2,
+        childAspectRatio: aspectRatio(context),
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
       ),
       itemBuilder: itemBuilder,
       itemCount: products.length,
     );
+  }
+
+  double aspectRatio(BuildContext context) {
+    int crossAxisCount = screenSize(context);
+    var width = MediaQuery.of(context).size.width;
+
+    switch (crossAxisCount) {
+      case 4:
+        if (width < 1250) return 1.8;
+        if (width < 1400) return 2.0;
+        return 2.2;
+      case 3:
+        if (width > 1080) return 2.2;
+        if (width < 900) return 1.6;
+        return 1.8;
+      case 2:
+        if (width > 750 && width < 900) return 2.2;
+        if (width < 590) return 1.6;
+        return 1.7;
+      default:
+        return 3;
+    }
   }
 
   int screenSize(BuildContext context) {
@@ -49,82 +73,81 @@ class ProductWebGridView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            title(context, "Name:   ", product.name),
-            SizedBox(height: 5),
-            title(
-                context,
-                "Launch Date:   ",
-                product.launchedAt
-                        .tryParse("yyyy-MM-dd")
-                        ?.getFormatedString("dd MMM, yyyy") ??
-                    ''),
-            SizedBox(height: 5),
-            title(context, "Launched Site:   ", product.launchedSite),
-            SizedBox(height: 5),
             Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  "Ratings:   ",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).primaryColor),
+                Expanded(
+                  child: Text(
+                    product.name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
-                Text("${product.ratings}"),
-                Icon(
-                  Icons.star,
-                  size: 15,
+                Ratings(
+                  ratings: product.ratings,
                 ),
               ],
             ),
             SizedBox(height: 5),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton.icon(
-                  style: ButtonStyle(
-                    alignment: Alignment.center,
-                    minimumSize: MaterialStateProperty.all(Size(100, 30)),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
+                Icon(
+                  Icons.calendar_today,
+                  size: 18,
+                ),
+                SizedBox(
+                  width: 2,
+                ),
+                Text(
+                  product.launchedAt
+                          .tryParse("yyyy-MM-dd")
+                          ?.getFormatedString("dd MMM, yyyy") ??
+                      '',
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 6,
+            ),
+            Row(
+              children: [
+                Icon(
+                  Icons.location_on_outlined,
+                  size: 18,
+                ),
+                SizedBox(
+                  width: 2,
+                ),
+                Text(
+                  product.launchedSite,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
                   onPressed: () async {
                     await AutoRouter.of(context).push(
                         EditProduct(id: product.id, isUrlRedirection: false));
                     productsBloc.getProducts();
                   },
-                  icon: Icon(
-                    Icons.edit_rounded,
-                    size: 15,
-                  ),
-                  label: Text("Edit"),
+                  icon: Icon(Icons.edit),
                 ),
-                ElevatedButton.icon(
-                  style: ButtonStyle(
-                    minimumSize: MaterialStateProperty.all(Size(100, 30)),
-                    backgroundColor:
-                        MaterialStateProperty.all(Colors.redAccent),
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                      RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                    ),
-                  ),
+                SizedBox(
+                  width: 4,
+                ),
+                IconButton(
                   onPressed: () {
                     productsBloc.deleteProduct(product.id, context);
                   },
-                  icon: Icon(
-                    Icons.delete,
-                    size: 15,
-                  ),
-                  label: Text("Delete"),
-                )
+                  icon: Icon(Icons.delete),
+                ),
               ],
-            )
+            ),
           ],
         ),
       ),

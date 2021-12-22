@@ -19,7 +19,7 @@ import 'package:product_management_demo/utils/route_const.dart';
     ),
     AutoRoute(
       page: AddProductPage,
-      path: "/$routeHome/$routeAddProduct/:id",
+      path: "/$routeHome/:id",
       name: "editProduct",
     ),
   ],

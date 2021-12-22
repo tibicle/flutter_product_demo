@@ -9,6 +9,7 @@
 // **************************************************************************
 
 import 'package:auto_route/auto_route.dart' as _i3;
+import 'package:flutter/foundation.dart' as _i5;
 import 'package:flutter/material.dart' as _i4;
 
 import '../products/ui/add_product_page.dart' as _i2;
@@ -54,7 +55,7 @@ class AppRouter extends _i3.RootStackRouter {
             path: '/', redirectTo: '/products', fullMatch: true),
         _i3.RouteConfig(Products.name, path: '/products'),
         _i3.RouteConfig(AddProduct.name, path: '/products/add'),
-        _i3.RouteConfig(EditProduct.name, path: '/products/add/:id')
+        _i3.RouteConfig(EditProduct.name, path: '/products/:id')
       ];
 }
 
@@ -67,7 +68,7 @@ class Products extends _i3.PageRouteInfo<void> {
 
 /// generated route for [_i2.AddProductPage]
 class AddProduct extends _i3.PageRouteInfo<AddProductArgs> {
-  AddProduct({_i4.Key? key, String? id, bool isUrlRedirection = true})
+  AddProduct({_i5.Key? key, String? id, bool isUrlRedirection = true})
       : super(name,
             path: '/products/add',
             args: AddProductArgs(
@@ -80,7 +81,7 @@ class AddProduct extends _i3.PageRouteInfo<AddProductArgs> {
 class AddProductArgs {
   const AddProductArgs({this.key, this.id, this.isUrlRedirection = true});
 
-  final _i4.Key? key;
+  final _i5.Key? key;
 
   final String? id;
 
@@ -94,9 +95,9 @@ class AddProductArgs {
 
 /// generated route for [_i2.AddProductPage]
 class EditProduct extends _i3.PageRouteInfo<EditProductArgs> {
-  EditProduct({_i4.Key? key, String? id, bool isUrlRedirection = true})
+  EditProduct({_i5.Key? key, String? id, bool isUrlRedirection = true})
       : super(name,
-            path: '/products/add/:id',
+            path: '/products/:id',
             args: EditProductArgs(
                 key: key, id: id, isUrlRedirection: isUrlRedirection),
             rawPathParams: {'id': id});
@@ -107,7 +108,7 @@ class EditProduct extends _i3.PageRouteInfo<EditProductArgs> {
 class EditProductArgs {
   const EditProductArgs({this.key, this.id, this.isUrlRedirection = true});
 
-  final _i4.Key? key;
+  final _i5.Key? key;
 
   final String? id;
 
