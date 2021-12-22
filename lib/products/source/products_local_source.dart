@@ -48,8 +48,8 @@ class ProductsLocalSource {
     datalist?.forEach((element) {
       localProducts.add(ProductLocalEntity.fromJson(element));
     });
-    var productContains =
-        localProducts.indexWhere((element) => element.name == name);
+    var productContains = localProducts.indexWhere(
+        (element) => element.name.toLowerCase() == name.toLowerCase());
     if (productContains != -1) {
       throw DatabaseException(
           "Product with this name already exists  in database");
@@ -83,8 +83,8 @@ class ProductsLocalSource {
       throw DatabaseException("Product does not exists in database");
     } else {
       localProducts.removeWhere((element) => element.id == id);
-      var duplicateNameproductIndex =
-          localProducts.indexWhere((element) => element.name == name);
+      var duplicateNameproductIndex = localProducts.indexWhere(
+          (element) => element.name.toLowerCase() == name.toLowerCase());
       if (duplicateNameproductIndex != -1) {
         throw DatabaseException(
             "Product with this name already exists in database");
