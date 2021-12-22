@@ -183,7 +183,7 @@ class _ProductsMobileWidgetState extends State<ProductsMobileWidget> {
           getMenu(FilterType.sortByLaunchdate,
               "Sort by launch date (Recent first)"),
           getMenu(FilterType.sortByLaunchsite, "Sort by launch site (A -> Z)"),
-          getMenu(FilterType.sortByRatings, "Sort by ratings (High to Low)")
+          getMenu(FilterType.sortByRatings, "Sort by popularity (High to Low)")
         ];
       });
 
